@@ -1,10 +1,9 @@
+// components/Sidebar.jsx
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import api from '../services/axios'
+import api from '../services/axios';
 
-const Sidebar = () => {
+const Sidebar = ({ onSelectBoard, selectedBoardId }) => {
   const [boards, setBoards] = useState([]);
-  const location = useLocation();
 
   useEffect(() => {
     api.get('/boards').then(res => setBoards(res.data));
@@ -14,9 +13,18 @@ const Sidebar = () => {
     <div style={{ width: '200px', background: '#f4f4f4', padding: '1rem' }}>
       <h3>Boards</h3>
       {boards.map(board => (
-        <Link key={board._id} to={`/board/${board._id}`} style={{ display: 'block', margin: '0.5rem 0' }}>
+        <div
+          key={board._id}
+          onClick={() => onSelectBoard(board)}
+          style={{
+            margin: '0.5rem 0',
+            cursor: 'pointer',
+            fontWeight: selectedBoardId === board._id ? 'bold' : 'normal',
+            color: selectedBoardId === board._id ? '#007bff' : '#333'
+          }}
+        >
           {board.name}
-        </Link>
+        </div>
       ))}
     </div>
   );
